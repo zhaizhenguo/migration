@@ -56,6 +56,7 @@ public class SysMenuServiceImpl implements SysMenuService {
             List<SysMenu> childrenMenu = new ArrayList<>();
             for (SysMenu subMenu : submenuList) {
                 if (subMenu.getParentId() != null && subMenu.getParentId().equals(supMenu.getId())) {
+                    subMenu.setParentName(supMenu.getName());
                     childrenMenu.add(subMenu);
                 }
             }
@@ -70,6 +71,7 @@ public class SysMenuServiceImpl implements SysMenuService {
         if (userId == null) {
             return sysMenuRepository.findAll();
         }
+
         Optional<SysUser> user = sysUserRepository.findById(userId);
         String userName = null;
         if (user.isPresent()) {

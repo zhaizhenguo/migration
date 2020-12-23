@@ -7,6 +7,7 @@ import com.oscar.migration.dao.SysUserRoleRepository;
 import com.oscar.migration.entity.SysUser;
 import com.oscar.migration.entity.SysUserRole;
 import com.oscar.migration.constants.ResponseCode;
+import com.oscar.migration.util.PasswordUtils;
 import com.oscar.migration.vo.PageRequest;
 import com.oscar.migration.vo.PageResult;
 import com.oscar.migration.service.SysUserService;
@@ -101,7 +102,11 @@ public class SysUserServiceImpl implements SysUserService {
         if (!checkUser.isEmpty()) {
             return Result.error("用户名已存在");
         }
+        String salt = PasswordUtils.getSalt();
+        String encodePsd = PasswordUtils.encode(sysUser.getPassword(),salt);
         Date date = new Date();
+        sysUser.setSalt(salt);
+        sysUser.setPassword(encodePsd);
         sysUser.setCreateTime(date);
         sysUser.setLaseUpdateTime(date);
         SysUser revUser = sysUserRepository.save(sysUser);
@@ -175,6 +180,14 @@ public class SysUserServiceImpl implements SysUserService {
         return Result.error("查询失败");
     }
 
+
+    @Override
+    public SysUser findUserByUserName(String userName){
+        if (StringUtils.isBlank(userName)){
+            return null;
+        }
+        return sysUserRepository.findUserByUserName(userName);
+    }
     @Override
     public PageResult findPage(PageRequest pagerequest) {
         return findPageCommon(pagerequest, null);

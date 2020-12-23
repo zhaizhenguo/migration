@@ -8,7 +8,7 @@ import com.oscar.migration.vo.Result;
 public interface SysUserService extends BaseCurdService<SysUser> {
 
     /**
-     * 根据姓名查询
+     * 根据姓名分页查询
      *
      * @param pagerequest
      * @param name
@@ -19,7 +19,16 @@ public interface SysUserService extends BaseCurdService<SysUser> {
     PageResult findPageByName(PageRequest pagerequest, String name);
 
     /**
-     * @description: 查找用户的角色集合
+     * @description: 根据用户名查询用户信息
+     * @author zzg
+     * @date: 2020/12/23 13:49
+     * @param: [userName]
+     * @return: com.oscar.migration.entity.SysUser
+     */
+    SysUser findUserByUserName(String userName);
+
+    /**
+     * @description: 根据用户ID查找用户的角色集合
      * @author zzg
      * @date: 2020/12/22 17:32
      * @param: [userId]

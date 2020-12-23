@@ -7,14 +7,13 @@ package com.oscar.migration.constants;
  */
 public interface SysConstants {
 
-	/**
-	 * 系统管理员用户名
-	 */
+	/**系统管理员用户名*/
 	String ADMIN = "admin";
 
-	/**
-	 * 系统管理员名称
-	 */
+	/** 系统管理员名称*/
 	String ADMIN_NAME = "管理员";
+
+	/**验证码session_key*/
+	String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY";
 	
 }

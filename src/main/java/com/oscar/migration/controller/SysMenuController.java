@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2020/12/18 15:59
  */
 @RestController
-@RequestMapping("menu")
+@RequestMapping("/menu")
 public class SysMenuController {
 
     @Autowired
@@ -22,7 +22,7 @@ public class SysMenuController {
         return menuService.findTree(userId);
     }
 
-    @PostMapping(value = "/findMenuByUserId")
+    @GetMapping(value = "/findMenuByUserId")
     public Result findMenuByUserId(@RequestParam Long userId) {
         return Result.ok(menuService.findMenuByUserId(userId));
     }

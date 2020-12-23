@@ -36,7 +36,7 @@ class SysUserServiceImplTest {
         sysUser.setEmail("361522251@qq.com");
         sysUser.setMobile("1236547895");
         sysUser.setPassword("123456");
-        sysUser.setName("fqy222");
+        sysUser.setName("jsz");
         List<Long> list = new ArrayList<>();
         list.add(1L);
         list.add(2L);
@@ -78,8 +78,8 @@ class SysUserServiceImplTest {
 
 
     @Test
-    void findUserRoles() {
-        Result userRoles = userService.findUserRoles(3L);
+    void findRolesByUserId() {
+        Result userRoles = userService.findRolesByUserId(3L);
         System.out.println(userRoles);
         Assert.assertEquals(0,userRoles.getCode());
     }

@@ -18,7 +18,11 @@ public enum ResponseCode {
     /**
      * @description: 参数错误
      */
-    PARAM_ERROR(-7, "参数错误")
+    PARAM_ERROR(-7, "参数错误"),
+    /**
+     * @description: 登录超时
+     */
+    LOGIN_TIMEOUT_ERROR(-9, "登录超时")
    ;
     public final int code;
     public final String msg;

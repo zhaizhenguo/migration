@@ -1,7 +1,5 @@
 package com.oscar.migration.service.impl;
 
-import com.oscar.migration.service.SysMenuService;
-import com.oscar.migration.service.SysUserService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +17,11 @@ class SysMenuServiceImplTest {
 
     @Test
     void findTree() {
-        System.out.println(sysMenuService.findTree("zzg"));
+        System.out.println(sysMenuService.findTree(4L));
     }
 
     @Test
     void findMenuByUser() {
-        System.out.println(sysMenuService.findMenuByUser("admin"));
+        System.out.println(sysMenuService.findMenuByUserId(4L));
     }
 }

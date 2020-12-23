@@ -1,8 +1,6 @@
 package com.oscar.migration.service.impl;
 
 import com.oscar.migration.entity.SysRole;
-import com.oscar.migration.entity.SysRoleMenu;
-import com.oscar.migration.service.SysMenuService;
 import com.oscar.migration.service.SysRoleService;
 import com.oscar.migration.vo.PageRequest;
 import com.oscar.migration.vo.PageResult;
@@ -13,12 +11,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author zzg
@@ -49,7 +43,7 @@ class SysRoleServiceImplTest {
         role.setRoleMenus(list);
         Result res = sysRoleService.save(role);
         System.out.println(res);
-        Assert.assertEquals(0,res.getCode());
+        Assert.assertEquals(0, res.getCode());
     }
 
     @Test
@@ -58,7 +52,7 @@ class SysRoleServiceImplTest {
         role.setId(9L);
         Result res = sysRoleService.delete(role);
         System.out.println(res);
-        Assert.assertEquals(0,res.getCode());
+        Assert.assertEquals(0, res.getCode());
     }
 
     @Test
@@ -78,7 +72,7 @@ class SysRoleServiceImplTest {
         role.setRoleMenus(list);
         Result res = sysRoleService.update(role);
         System.out.println(res);
-        Assert.assertEquals(0,res.getCode());
+        Assert.assertEquals(0, res.getCode());
     }
 
 
@@ -92,6 +86,7 @@ class SysRoleServiceImplTest {
         PageResult resPage = sysRoleService.findPage(pr);
         System.out.println(resPage);
     }
+
     @Test
     void findPageByName() {
     }

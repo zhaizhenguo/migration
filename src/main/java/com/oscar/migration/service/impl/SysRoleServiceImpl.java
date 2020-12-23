@@ -104,6 +104,7 @@ public class SysRoleServiceImpl implements SysRoleService {
             SysRole echoRole = op.get();
             if (SysConstants.ADMIN_NAME.equals(echoRole.getName())) {
                 return Result.error("管理员角色，不允许修改！");
+
             }
             sysRole.setLaseUpdateTime(new Date());
             sysRoleRepository.save(sysRole);
