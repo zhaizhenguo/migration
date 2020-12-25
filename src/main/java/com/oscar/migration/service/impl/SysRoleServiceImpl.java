@@ -9,6 +9,7 @@ import com.oscar.migration.entity.SysRole;
 import com.oscar.migration.entity.SysRoleMenu;
 import com.oscar.migration.service.SysRoleService;
 import com.oscar.migration.constants.ResponseCode;
+import com.oscar.migration.vo.ColumnFilter;
 import com.oscar.migration.vo.PageRequest;
 import com.oscar.migration.vo.PageResult;
 import com.oscar.migration.vo.Result;
@@ -41,8 +42,11 @@ public class SysRoleServiceImpl implements SysRoleService {
     SysMenuRepository sysMenuRepository;
 
     @Override
-    public List<SysMenu> findMenusByRoleId(Long roleId) {
-        return sysMenuRepository.findMenuByRoleId(roleId);
+    public Result findAll() {
+        SysRole role = new SysRole();
+        role.setDelFlag(0L);
+        List<SysRole> roles = sysRoleRepository.findAll(Example.of(role));
+        return Result.ok(roles);
     }
 
     @Override
@@ -133,40 +137,23 @@ public class SysRoleServiceImpl implements SysRoleService {
 
     @Override
     public PageResult findPage(PageRequest pagerequest) {
-        return findPageCommon(pagerequest, null);
-    }
-
-    @Override
-    public PageResult findPageByName(PageRequest pagerequest, String name) {
-        return findPageCommon(pagerequest, name);
-    }
-
-    /**
-     * @description: 查询公共方法
-     * @author zzg
-     * @date: 2020/12/21 4:43
-     * @param: [pagerequest, name]
-     * @return: com.oscar.migration.vo.PageResult
-     */
-    PageResult findPageCommon(PageRequest pagerequest, String name) {
         PageResult res = new PageResult();
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.ASC, "id");
         SysRole sysRole = new SysRole();
         sysRole.setDelFlag(0L);
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withMatcher("delFlag", ExampleMatcher.GenericPropertyMatchers.contains());
+        /**设置过滤参数*/
+        String name = getColumnFilterValue(pagerequest, "name");
         if (StringUtils.isNotBlank(name)) {
             sysRole.setName(name);
-            matcher.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains());
         }
-        Example<SysRole> example = Example.of(sysRole, matcher);
         Pageable pageable = org.springframework.data.domain.PageRequest.of(pagerequest.getPageNum(), pagerequest.getPageSize(), sort);
-        Page<SysRole> page = sysRoleRepository.findAll(example, pageable);
+        Page<SysRole> page = sysRoleRepository.findAll(Example.of(sysRole), pageable);
         res.setContent(page.getContent());
         res.setTotalSize(page.getTotalElements());
         res.setTotalPages(page.getTotalPages());
         return res;
     }
+
 
     /**
      * @description: 保存或更新角色菜单对应关系
@@ -216,6 +203,21 @@ public class SysRoleServiceImpl implements SysRoleService {
         List<SysRoleMenu> delAll = sysRoleMenuRepository.findAll(Example.of(rm));
         sysRoleMenuRepository.deleteAll(delAll);
         sysRoleMenuRepository.flush();
+    }
+
+    /**
+     * 获取过滤字段的值
+     *
+     * @param filterName
+     * @return
+     */
+    public String getColumnFilterValue(PageRequest pageRequest, String filterName) {
+        String value = null;
+        ColumnFilter columnFilter = pageRequest.getColumnFilter(filterName);
+        if (columnFilter != null) {
+            value = columnFilter.getValue();
+        }
+        return value;
     }
 
 }

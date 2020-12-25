@@ -17,4 +17,7 @@ public interface SysUserRepository extends JpaRepository<SysUser, Long>
 
     @Query(value = "SELECT * FROM SYS_USER WHERE NAME = ?1", nativeQuery = true)
     SysUser findUserByUserName(String userName);
+
+    @Query(value = "SELECT GROUP_CONCAT(r.NAME)   FROM SYS_USER_ROLE ur ,SYS_ROLE r WHERE ur.USER_ID = ?1 AND ur.ROLE_ID = r.ID", nativeQuery = true)
+    String findUserRoleByUserId(Long id);
 }

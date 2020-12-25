@@ -24,7 +24,7 @@ public class SysMenu extends BaseEntity{
     private String index;
 
     @Column(name = "TYPE" )
-    private String type;
+    private Long type;
 
     @Column(name = "ICON" , length = 100)
     private String icon;

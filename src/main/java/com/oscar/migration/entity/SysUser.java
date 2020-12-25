@@ -30,8 +30,8 @@ public class SysUser extends BaseEntity {
     @Column(name = "MOBILE", length = 40)
     private String mobile;
 
-    @Column(name = "STATUS")
-    private Long status;
+    @Column(name = "TOOL_USE_NUM")
+    private Long toolUseNum;
 
     /**非数据库字段*/
     @Transient

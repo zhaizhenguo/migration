@@ -50,4 +50,5 @@ public interface BaseCurdService<T> {
      */
     PageResult findPage(PageRequest pageRequest);
 
+
 }

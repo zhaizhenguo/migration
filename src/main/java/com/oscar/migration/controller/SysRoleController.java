@@ -39,13 +39,8 @@ public class SysRoleController {
         return Result.ok(roleService.findPage(pageRequest));
     }
 
-    @PostMapping(value = "/findPageByName")
-    public Result findPageByName(@RequestBody PageRequest pageRequest, @RequestParam String name) {
-        return Result.ok(roleService.findPageByName(pageRequest, name));
-    }
-
-    @PostMapping(value = "/findMenusByRoleId")
-    public Result findMenusByRoleId(@RequestParam Long roleId) {
-        return Result.ok(roleService.findMenusByRoleId(roleId));
+    @PostMapping(value = "/findAll")
+    public Result findAll() {
+        return roleService.findAll();
     }
 }

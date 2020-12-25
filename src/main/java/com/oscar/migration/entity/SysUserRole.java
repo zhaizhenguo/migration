@@ -9,7 +9,6 @@ import java.util.Date;
 @Data
 @Table(name = "SYS_USER_ROLE")
 public class SysUserRole extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

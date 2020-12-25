@@ -20,8 +20,17 @@ public interface SysMenuService {
      * @description: 根据用户ID查询菜单列表
      * @author zzg
      * @date: 2020/12/21 4:52
-     * @param: [userName]
+     * @param: [userId]
      * @return: java.util.List<com.oscar.migration.entity.SysMenu>
      */
     List<SysMenu> findMenuByUserId(Long userId);
+
+    /**
+     * @description: 根据角色ID查询菜单列表
+     * @author zzg
+     * @date: 2020/12/21 4:52
+     * @param: [roleId]
+     * @return: java.util.List<com.oscar.migration.entity.SysMenu>
+     */
+    List<SysMenu> findMenuByRoleId(Long roleId);
 }

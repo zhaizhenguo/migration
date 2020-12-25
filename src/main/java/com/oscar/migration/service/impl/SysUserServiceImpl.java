@@ -8,6 +8,7 @@ import com.oscar.migration.entity.SysUser;
 import com.oscar.migration.entity.SysUserRole;
 import com.oscar.migration.constants.ResponseCode;
 import com.oscar.migration.util.PasswordUtils;
+import com.oscar.migration.vo.ColumnFilter;
 import com.oscar.migration.vo.PageRequest;
 import com.oscar.migration.vo.PageResult;
 import com.oscar.migration.service.SysUserService;
@@ -39,7 +40,19 @@ public class SysUserServiceImpl implements SysUserService {
         SysUserRole userRole = new SysUserRole();
         userRole.setUserId(userId);
         List<SysUserRole> findAll = sysUserRoleRepository.findAll(Example.of(userRole));
-        return Result.ok(findAll);
+        List<Long> roles = new ArrayList<>();
+        for (SysUserRole role : findAll) {
+            roles.add(role.getRoleId());
+        }
+        return Result.ok(roles);
+    }
+
+    @Override
+    public String findUserRoleByUserId(Long userId) {
+        if (userId == null) {
+            return null;
+        }
+        return sysUserRepository.findUserRoleByUserId(userId);
     }
 
     /**
@@ -103,7 +116,7 @@ public class SysUserServiceImpl implements SysUserService {
             return Result.error("用户名已存在");
         }
         String salt = PasswordUtils.getSalt();
-        String encodePsd = PasswordUtils.encode(sysUser.getPassword(),salt);
+        String encodePsd = PasswordUtils.encode(sysUser.getPassword(), salt);
         Date date = new Date();
         sysUser.setSalt(salt);
         sysUser.setPassword(encodePsd);
@@ -159,7 +172,8 @@ public class SysUserServiceImpl implements SysUserService {
             }
             sysUser.setLaseUpdateTime(new Date());
             sysUserRepository.save(sysUser);
-            Result result = saveOrUpdateUserRoles(user.getId(), sysUser.getCreateBy(), sysUser.getUserRoles());
+            /**更新用户角色关系*/
+            Result result = saveOrUpdateUserRoles(user.getId(), sysUser.getLaseUpdateBy(), sysUser.getUserRoles());
             if (result.getCode() != 0) {
                 return Result.error("保存角色失败," + result.getMsg());
             }
@@ -182,40 +196,46 @@ public class SysUserServiceImpl implements SysUserService {
 
 
     @Override
-    public SysUser findUserByUserName(String userName){
-        if (StringUtils.isBlank(userName)){
+    public SysUser findUserByUserName(String userName) {
+        if (StringUtils.isBlank(userName)) {
             return null;
         }
         return sysUserRepository.findUserByUserName(userName);
     }
+
     @Override
     public PageResult findPage(PageRequest pagerequest) {
-        return findPageCommon(pagerequest, null);
-    }
-
-    @Override
-    public PageResult findPageByName(PageRequest pagerequest, String name) {
-        return findPageCommon(pagerequest, name);
-    }
-
-    PageResult findPageCommon(PageRequest pagerequest, String name) {
         PageResult res = new PageResult();
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         SysUser sysUser = new SysUser();
         sysUser.setDelFlag(0L);
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withMatcher("delFlag", ExampleMatcher.GenericPropertyMatchers.contains());
+        /**设置过滤参数*/
+        String name = getColumnFilterValue(pagerequest,"name");
         if (StringUtils.isNotBlank(name)) {
             sysUser.setName(name);
-            matcher.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains());
         }
-        Example<SysUser> example = Example.of(sysUser, matcher);
+        /**设置排序规则*/
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        /**分页参数*/
         Pageable pageable = org.springframework.data.domain.PageRequest.of(pagerequest.getPageNum(), pagerequest.getPageSize(), sort);
-        Page<SysUser> page = sysUserRepository.findAll(example, pageable);
+        Page<SysUser> page = sysUserRepository.findAll(Example.of(sysUser), pageable);
         res.setContent(page.getContent());
         res.setTotalSize(page.getTotalElements());
         res.setTotalPages(page.getTotalPages());
         return res;
+    }
+
+    /**
+     * 获取过滤字段的值
+     * @param filterName
+     * @return
+     */
+    public String getColumnFilterValue(PageRequest pageRequest, String filterName) {
+        String value = null;
+        ColumnFilter columnFilter = pageRequest.getColumnFilter(filterName);
+        if(columnFilter != null) {
+            value = columnFilter.getValue();
+        }
+        return value;
     }
 
 }

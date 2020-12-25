@@ -21,7 +21,7 @@ public class SysRole extends BaseEntity {
     @Column(name = "REMARK", length = 2000)
     private String remark;
 
-    /**非数据库字段*/
+    /**menuId集合 非数据库字段*/
     @Transient
     private List<Long> roleMenus = new ArrayList<>();
 

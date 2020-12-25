@@ -71,7 +71,6 @@ public class SysMenuServiceImpl implements SysMenuService {
         if (userId == null) {
             return sysMenuRepository.findAll();
         }
-
         Optional<SysUser> user = sysUserRepository.findById(userId);
         String userName = null;
         if (user.isPresent()) {
@@ -81,6 +80,11 @@ public class SysMenuServiceImpl implements SysMenuService {
             return sysMenuRepository.findAll();
         }
         return sysMenuRepository.findMenuByUserId(userId);
+    }
+
+    @Override
+    public List<SysMenu> findMenuByRoleId(Long roleId) {
+        return sysMenuRepository.findMenuByRoleId(roleId);
     }
 
 }

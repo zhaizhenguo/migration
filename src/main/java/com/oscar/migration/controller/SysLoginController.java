@@ -10,9 +10,11 @@ import com.oscar.migration.service.SysUserService;
 import com.oscar.migration.util.IOUtils;
 import com.oscar.migration.util.PasswordUtils;
 import com.oscar.migration.util.SecurityUtils;
+import com.oscar.migration.vo.LoginAuthInfo;
 import com.oscar.migration.vo.LoginBean;
 import com.oscar.migration.vo.Result;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,11 +97,25 @@ public class SysLoginController {
         }
 
         /**账号锁定*/
-        if (user.getStatus() !=null && user.getStatus() == 0) {
+        if (user.getToolUseNum() !=null && user.getToolUseNum() == 0) {
             return Result.error("账号已被锁定,请联系管理员");
         }
+
+        /**查询用户权限（仅做展示）*/
+        String roles = sysUserService.findUserRoleByUserId(user.getId());
         /**系统登录认证*/
         JwtAuthenticatioToken token = SecurityUtils.login(request, username, password, authenticationManager);
-        return Result.ok(token);
+        String formatDate = DateFormatUtils.format(user.getCreateTime(), "yyyy-MM-dd");
+        LoginAuthInfo authInfo = new LoginAuthInfo();
+        authInfo.setUserId(user.getId());
+        authInfo.setUserName(user.getName());
+        authInfo.setCreateTime(formatDate);
+        authInfo.setUserRole(roles);
+        authInfo.setToken(token.getToken());
+        return Result.ok(authInfo);
     }
+
+    public Result layout(){
+        return Result.ok();
+    };
 }

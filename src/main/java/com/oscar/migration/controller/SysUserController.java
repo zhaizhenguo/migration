@@ -39,14 +39,9 @@ public class SysUserController {
         return Result.ok(userService.findPage(pageRequest));
     }
 
-    @PostMapping(value = "/findPageByName")
-    public Result findPageByName(@RequestBody PageRequest pageRequest, @RequestParam String name) {
-        return Result.ok(userService.findPageByName(pageRequest, name));
-    }
-
-    @PostMapping(value = "/findRolesByUserId")
-    public Result findRolesByUserId(@RequestParam Long userId) {
-        return Result.ok(userService.findRolesByUserId(userId));
+    @GetMapping(value = "/findRolesByUserId")
+    public Result findRolesByUserId(@RequestParam(name="id") Long id) {
+        return userService.findRolesByUserId(id);
     }
 
 

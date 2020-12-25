@@ -11,19 +11,24 @@ import org.springframework.web.bind.annotation.*;
  * @date 2020/12/18 15:59
  */
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("menu")
 public class SysMenuController {
 
     @Autowired
     SysMenuService menuService;
 
-    @PostMapping(value = "/findTree")
-    public Result findTree(@RequestParam Long userId) {
+    @GetMapping(value = "/findTree")
+    public Result findTree(@RequestParam(name = "userId",required = false) Long userId) {
         return menuService.findTree(userId);
     }
 
     @GetMapping(value = "/findMenuByUserId")
-    public Result findMenuByUserId(@RequestParam Long userId) {
+    public Result findMenuByUserId(@RequestParam(name = "userId") Long userId) {
         return Result.ok(menuService.findMenuByUserId(userId));
+    }
+
+    @GetMapping(value = "/findMenuByRoleId")
+    public Result findMenuByRoleId(@RequestParam(name = "roleId") Long roleId) {
+        return Result.ok(menuService.findMenuByRoleId(roleId));
     }
 }

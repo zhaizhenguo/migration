@@ -8,17 +8,6 @@ import com.oscar.migration.vo.Result;
 public interface SysUserService extends BaseCurdService<SysUser> {
 
     /**
-     * 根据姓名分页查询
-     *
-     * @param pagerequest
-     * @param name
-     * @author zzg
-     * @date: 2020/12/21 4:27
-     * @return: com.oscar.migration.vo.PageResult
-     */
-    PageResult findPageByName(PageRequest pagerequest, String name);
-
-    /**
      * @description: 根据用户名查询用户信息
      * @author zzg
      * @date: 2020/12/23 13:49
@@ -36,4 +25,12 @@ public interface SysUserService extends BaseCurdService<SysUser> {
      */
     Result findRolesByUserId(Long userId);
 
+    /** 
+     * @description: 根据用户ID查询其权限
+     * @author zzg 
+     * @date: 2020/12/24 11:20
+     * @param: [userId] 
+     * @return: java.lang.String
+     */
+    String findUserRoleByUserId(Long userId);
 }

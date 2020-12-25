@@ -1,10 +1,11 @@
 package com.oscar.migration.vo;
 
+import lombok.Data;
+
 /**
  * 分页查询列过滤器
- * @author Louis
- * @date Aug 19, 2018
  */
+@Data
 public class ColumnFilter {
 
 	/**
@@ -15,18 +16,5 @@ public class ColumnFilter {
 	 * 查询的值
 	 */
 	private String value;
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getValue() {
-		return value;
-	}
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
+
 }
