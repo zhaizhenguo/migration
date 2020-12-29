@@ -1,6 +1,7 @@
 package com.oscar.migration.service;
 
 import com.oscar.migration.entity.SysUser;
+import com.oscar.migration.vo.LoginPassword;
 import com.oscar.migration.vo.PageRequest;
 import com.oscar.migration.vo.PageResult;
 import com.oscar.migration.vo.Result;
@@ -33,4 +34,13 @@ public interface SysUserService extends BaseCurdService<SysUser> {
      * @return: java.lang.String
      */
     String findUserRoleByUserId(Long userId);
+
+    /**
+     * @description: 修改密码
+     * @author zzg
+     * @date: 2020/12/22 17:32
+     * @param: [loginPassword]
+     * @return: com.oscar.migration.vo.Result
+     */
+    Result updatePassword(LoginPassword loginPassword);
 }

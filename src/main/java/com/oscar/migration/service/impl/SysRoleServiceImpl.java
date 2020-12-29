@@ -106,10 +106,10 @@ public class SysRoleServiceImpl implements SysRoleService {
         Optional<SysRole> op = sysRoleRepository.findById(sysRole.getId());
         if (op.isPresent()) {
             SysRole echoRole = op.get();
-            if (SysConstants.ADMIN_NAME.equals(echoRole.getName())) {
-                return Result.error("管理员角色，不允许修改！");
-
-            }
+//            TODO
+//            if (SysConstants.ADMIN_NAME.equals(echoRole.getName())) {
+//                return Result.error("管理员角色，不允许修改！");
+//            }
             sysRole.setLaseUpdateTime(new Date());
             sysRoleRepository.save(sysRole);
             /**更新角色菜单关系*/
@@ -168,9 +168,10 @@ public class SysRoleServiceImpl implements SysRoleService {
         }
         Optional<SysRole> role = sysRoleRepository.findById(roleId);
         if (role.isPresent()) {
-            if (SysConstants.ADMIN_NAME.equals(role.get().getName())) {
-                return Result.error("管理员拥有所有菜单权限，不允许修改！");
-            }
+            //TODO
+//            if (SysConstants.ADMIN_NAME.equals(role.get().getName())) {
+//                return Result.error("管理员拥有所有菜单权限，不允许修改！");
+//            }
             deleteRoleMenus(roleId);
             List<SysRoleMenu> list = new ArrayList<>();
             Date date = new Date();

@@ -8,11 +8,9 @@ import com.oscar.migration.entity.SysUser;
 import com.oscar.migration.entity.SysUserRole;
 import com.oscar.migration.constants.ResponseCode;
 import com.oscar.migration.util.PasswordUtils;
-import com.oscar.migration.vo.ColumnFilter;
-import com.oscar.migration.vo.PageRequest;
-import com.oscar.migration.vo.PageResult;
+import com.oscar.migration.vo.*;
 import com.oscar.migration.service.SysUserService;
-import com.oscar.migration.vo.Result;
+import com.oscar.migration.vo.PageRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -55,6 +53,29 @@ public class SysUserServiceImpl implements SysUserService {
         return sysUserRepository.findUserRoleByUserId(userId);
     }
 
+    @Override
+    public Result updatePassword(LoginPassword loginPassword) {
+        Long id = loginPassword.getId();
+        String oldPassword = loginPassword.getOldPassword();
+        String newPassword = loginPassword.getNewPassword();
+        if(id == null || StringUtils.isBlank(oldPassword) || StringUtils.isBlank(newPassword)){
+            return Result.error("参数错误");
+        }
+        /**用户信息*/
+        Optional<SysUser> userInfo = sysUserRepository.findById(id);
+        if(!userInfo.isPresent()){
+            return Result.error("账号不存在");
+        }
+        SysUser user = userInfo.get();
+        if (!PasswordUtils.matches(user.getSalt(), user.getPassword(), oldPassword)) {
+            return Result.error("原密码不正确");
+        }
+        String encodeNewPassword = PasswordUtils.encode(newPassword, user.getSalt());
+        user.setPassword(encodeNewPassword);
+        update(user);
+        return Result.ok();
+    }
+
     /**
      * @description: 保存或修改用户角色对应关系
      * @author zzg
@@ -69,9 +90,10 @@ public class SysUserServiceImpl implements SysUserService {
         Optional<SysUser> user = sysUserRepository.findById(userId);
         if (user.isPresent()) {
             String userName = user.get().getName();
-            if (SysConstants.ADMIN.equalsIgnoreCase(userName)) {
-                return Result.error("管理员不允许修改！");
-            }
+            //TODO
+//            if (SysConstants.ADMIN.equalsIgnoreCase(userName)) {
+//                return Result.error("管理员不允许修改！");
+//            }
             deleteUserRoles(userId);
             List<SysUserRole> userRoles = new ArrayList<>();
             Date date = new Date();
@@ -167,15 +189,18 @@ public class SysUserServiceImpl implements SysUserService {
         Optional<SysUser> opUser = sysUserRepository.findById(sysUser.getId());
         if (opUser.isPresent()) {
             SysUser user = opUser.get();
-            if (SysConstants.ADMIN.equalsIgnoreCase(user.getName())) {
-                Result.error("管理员用户不允许修改!");
-            }
+//            TODO
+//            if (SysConstants.ADMIN.equalsIgnoreCase(user.getName())) {
+//                Result.error("管理员用户不允许修改!");
+//            }
             sysUser.setLaseUpdateTime(new Date());
             sysUserRepository.save(sysUser);
             /**更新用户角色关系*/
-            Result result = saveOrUpdateUserRoles(user.getId(), sysUser.getLaseUpdateBy(), sysUser.getUserRoles());
-            if (result.getCode() != 0) {
-                return Result.error("保存角色失败," + result.getMsg());
+            if (!sysUser.getUserRoles().isEmpty()){
+                Result result = saveOrUpdateUserRoles(user.getId(), sysUser.getLaseUpdateBy(), sysUser.getUserRoles());
+                if (result.getCode() != 0) {
+                    return Result.error("保存角色失败," + result.getMsg());
+                }
             }
             return Result.ok();
         }

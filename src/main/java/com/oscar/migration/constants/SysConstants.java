@@ -1,7 +1,7 @@
 package com.oscar.migration.constants;
 
 /**
- * @description: 常量管理
+ * @description: 常量类
  * @author zzg
  * @date 2020/12/21 5:12
  */
@@ -15,5 +15,7 @@ public interface SysConstants {
 
 	/**验证码session_key*/
 	String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY";
+
+
 	
 }

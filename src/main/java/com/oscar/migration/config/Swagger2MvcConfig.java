@@ -5,7 +5,9 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 /**
- author: Administrator
+ * @description:
+ * @author zzg
+ * @date 2020/12/20 14:50
  */
 @Configuration
 public class Swagger2MvcConfig extends WebMvcConfigurationSupport {

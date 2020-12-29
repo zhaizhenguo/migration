@@ -20,8 +20,8 @@ public class SysMenu extends BaseEntity{
     @Column(name = "PARENT_ID")
     private Long parentId;
 
-    @Column(name = "INDEX" , length = 500)
-    private String index;
+    @Column(name = "URL" , length = 500)
+    private String url;
 
     @Column(name = "TYPE" )
     private Long type;

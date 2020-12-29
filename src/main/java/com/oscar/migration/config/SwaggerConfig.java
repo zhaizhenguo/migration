@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 /**
- author: Administrator
+ * @description:
+ * @author zzg
+ * @date 2020/12/20 14:50
  */
 @Configuration
 @EnableSwagger2
@@ -24,8 +26,8 @@ public class SwaggerConfig {
 
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
-				.title("mybatis-plus and swagger2")
-				.description("mybatis-plus and swagger2 结合使用")
+				.title("migration swagger2")
+				.description("数据迁移工具")
 				.termsOfServiceUrl("http://localhost:8081/")
 				.version("1.0.0")
 				.build();

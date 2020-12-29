@@ -1,6 +1,7 @@
 package com.oscar.migration.controller;
 
 import com.oscar.migration.entity.SysUser;
+import com.oscar.migration.vo.LoginPassword;
 import com.oscar.migration.vo.PageRequest;
 import com.oscar.migration.service.SysUserService;
 import com.oscar.migration.vo.Result;
@@ -32,6 +33,11 @@ public class SysUserController {
     @PostMapping(value = "/update")
     public Result update(@RequestBody SysUser sysUser) {
         return userService.update(sysUser);
+    }
+
+    @PostMapping(value = "/updatePassword")
+    public Result updatePassword(@RequestBody LoginPassword loginPassword) {
+        return userService.updatePassword(loginPassword);
     }
 
     @PostMapping(value = "/findPage")

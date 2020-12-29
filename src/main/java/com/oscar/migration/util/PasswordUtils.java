@@ -23,7 +23,7 @@ public class PasswordUtils {
      * 明文密码加密
      *
      * @param rawPass 明文
-     * @param salt
+     * @param salt    盐
      * @return
      */
     public static String encode(String rawPass, String salt) {

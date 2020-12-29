@@ -47,6 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // 首页和登录页面
             .antMatchers("/").permitAll()
             .antMatchers("/login").permitAll()
+            .antMatchers("/getPublicKey").permitAll()
             // swagger
             .antMatchers("/swagger-ui.html").permitAll()
             .antMatchers("/swagger-resources/**").permitAll()

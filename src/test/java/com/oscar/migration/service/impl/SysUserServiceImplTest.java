@@ -3,6 +3,7 @@ package com.oscar.migration.service.impl;
 import com.oscar.migration.entity.SysUser;
 import com.oscar.migration.entity.SysUserRole;
 import com.oscar.migration.service.SysUserService;
+import com.oscar.migration.vo.LoginPassword;
 import com.oscar.migration.vo.Result;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -82,5 +83,15 @@ class SysUserServiceImplTest {
         Result userRoles = userService.findRolesByUserId(3L);
         System.out.println(userRoles);
         Assert.assertEquals(0,userRoles.getCode());
+    }
+
+    @Test
+    void  updatePassword(){
+        LoginPassword psd = new LoginPassword();
+        psd.setId(17L);
+        psd.setOldPassword("1111");
+        psd.setNewPassword("123456");
+        Result result = userService.updatePassword(psd);
+        Assert.assertEquals(0,result.getCode());
     }
 }
