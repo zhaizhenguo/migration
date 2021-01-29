@@ -67,6 +67,9 @@ public class SysUserServiceImpl implements SysUserService {
             return Result.error("账号不存在");
         }
         SysUser user = userInfo.get();
+        if (SysConstants.ADMIN_NAME.equals(user.getName())) {
+            return Result.error("管理员用户，不允许修改！");
+        }
         if (!PasswordUtils.matches(user.getSalt(), user.getPassword(), oldPassword)) {
             return Result.error("原密码不正确");
         }
@@ -90,10 +93,9 @@ public class SysUserServiceImpl implements SysUserService {
         Optional<SysUser> user = sysUserRepository.findById(userId);
         if (user.isPresent()) {
             String userName = user.get().getName();
-            //TODO
-//            if (SysConstants.ADMIN.equalsIgnoreCase(userName)) {
-//                return Result.error("管理员不允许修改！");
-//            }
+            if (SysConstants.ADMIN.equalsIgnoreCase(userName)) {
+                return Result.error("管理员不允许修改！");
+            }
             deleteUserRoles(userId);
             List<SysUserRole> userRoles = new ArrayList<>();
             Date date = new Date();
@@ -189,10 +191,9 @@ public class SysUserServiceImpl implements SysUserService {
         Optional<SysUser> opUser = sysUserRepository.findById(sysUser.getId());
         if (opUser.isPresent()) {
             SysUser user = opUser.get();
-//            TODO
-//            if (SysConstants.ADMIN.equalsIgnoreCase(user.getName())) {
-//                Result.error("管理员用户不允许修改!");
-//            }
+            if (SysConstants.ADMIN.equalsIgnoreCase(user.getName())) {
+                Result.error("管理员用户不允许修改!");
+            }
             sysUser.setLaseUpdateTime(new Date());
             sysUserRepository.save(sysUser);
             /**更新用户角色关系*/

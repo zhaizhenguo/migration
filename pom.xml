@@ -17,10 +17,13 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+
+		<slf4j.version>1.7.25</slf4j.version>
 		<kaptcha.version>0.0.9</kaptcha.version>
 		<jwt.version>0.9.1</jwt.version>
 		<swagger.version>2.8.0</swagger.version>
 		<jdbc.version>1.0.0</jdbc.version>
+		<migration.version>1.0.0</migration.version>
 		<hibernateDialect.version>1.0.0</hibernateDialect.version>
 		<hibernate.version>5.4.10.Final</hibernate.version>
 		<commons-codec.version>1.13</commons-codec.version>
@@ -30,6 +33,20 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -44,6 +61,11 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
 			<version>${swagger.version}</version>
+		</dependency>
+		<!-- websocket dependency -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -67,10 +89,38 @@
 			<version>${hibernateDialect.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.shentong.test1</groupId>
+			<artifactId>test</artifactId>
+			<version>${migration.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.shentong.migration</groupId>
+			<artifactId>MigrationTool</artifactId>
+			<version>${migration.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.shentong.anywhere</groupId>
+			<artifactId>anywhere</artifactId>
+			<version>${migration.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.shentong.jide</groupId>
+			<artifactId>jide-grids</artifactId>
+			<version>${migration.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
+		<!-- c3p0 -->
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.5.2</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -130,7 +180,33 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+		<!-- https://mvnrepository.com/artifact/net.sf.dozer/dozer -->
+		<dependency>
+			<groupId>net.sf.dozer</groupId>
+			<artifactId>dozer</artifactId>
+			<version>5.5.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.ximpleware/vtd-xml -->
+		<dependency>
+			<groupId>com.ximpleware</groupId>
+			<artifactId>vtd-xml</artifactId>
+			<version>2.11</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>RELEASE</version>
+			<scope>compile</scope>
+		</dependency>
+
+
+	</dependencies>
 
 	<build>
 		<plugins>

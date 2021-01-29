@@ -1,6 +1,7 @@
 package com.oscar.migration.util;
 
 import com.oscar.migration.security.JwtAuthenticatioToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Louis
  * @date Nov 20, 2018
  */
+@Slf4j
 public class SecurityUtils {
 
 	/**
@@ -29,6 +31,7 @@ public class SecurityUtils {
 		token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 		// 执行登录认证过程
 	    Authentication authentication = authenticationManager.authenticate(token);
+		log.info("系统登录认证{}",authentication.toString());
 	    // 认证成功存储认证信息到上下文
 	    SecurityContextHolder.getContext().setAuthentication(authentication);
 		// 生成令牌并返回给客户端
@@ -43,7 +46,11 @@ public class SecurityUtils {
 	public static void checkAuthentication(HttpServletRequest request) {
 		// 获取令牌并根据令牌获取登录认证信息
 		Authentication authentication = JwtTokenUtils.getAuthenticationeFromToken(request);
+
 		// 设置登录认证信息到上下文
+		//4C1319B0C8FE1815BFAEBBFBA6F34EC5
+		//8F3BE52F99A9DFF2AC275194B86C5DA9
+		log.info("获取令牌进行认证{}",authentication);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 

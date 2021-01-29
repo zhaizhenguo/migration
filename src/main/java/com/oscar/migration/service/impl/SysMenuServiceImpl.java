@@ -15,10 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author zzg
+ */
 @Service
 public class SysMenuServiceImpl implements SysMenuService {
 
-    @Autowired
+    @Resource
     SysMenuRepository sysMenuRepository;
 
     @Resource
@@ -44,6 +47,11 @@ public class SysMenuServiceImpl implements SysMenuService {
         return Result.ok(resMenuList);
     }
 
+    @Override
+    public List<SysMenu> findMenuByRoleId(Long roleId) {
+        return sysMenuRepository.findMenuByRoleId(roleId);
+    }
+
     /**
      * @description: 遍历顶级菜单 找到其子菜单
      * @author zzg
@@ -66,7 +74,13 @@ public class SysMenuServiceImpl implements SysMenuService {
         }
     }
 
-    @Override
+    /**
+     * @description: 用户权限menu集合
+     * @author zzg
+     * @date: 2021/1/27 17:52
+     * @param: [userId]
+     * @return: java.util.List<com.oscar.migration.entity.SysMenu>
+     */
     public List<SysMenu> findMenuByUserId(Long userId) {
         if (userId == null) {
             return sysMenuRepository.findAll();
@@ -76,15 +90,11 @@ public class SysMenuServiceImpl implements SysMenuService {
         if (user.isPresent()) {
             userName = user.get().getName();
         }
-        if ( SysConstants.ADMIN.equalsIgnoreCase(userName)) {
+        if (SysConstants.ADMIN.equalsIgnoreCase(userName)) {
             return sysMenuRepository.findAll();
         }
         return sysMenuRepository.findMenuByUserId(userId);
     }
 
-    @Override
-    public List<SysMenu> findMenuByRoleId(Long roleId) {
-        return sysMenuRepository.findMenuByRoleId(roleId);
-    }
 
 }

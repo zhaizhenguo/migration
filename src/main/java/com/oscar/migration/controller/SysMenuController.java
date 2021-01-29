@@ -22,11 +22,6 @@ public class SysMenuController {
         return menuService.findTree(userId);
     }
 
-    @GetMapping(value = "/findMenuByUserId")
-    public Result findMenuByUserId(@RequestParam(name = "userId") Long userId) {
-        return Result.ok(menuService.findMenuByUserId(userId));
-    }
-
     @GetMapping(value = "/findMenuByRoleId")
     public Result findMenuByRoleId(@RequestParam(name = "roleId") Long roleId) {
         return Result.ok(menuService.findMenuByRoleId(roleId));

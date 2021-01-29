@@ -1,23 +1,29 @@
-package com.oscar.migration.util;
+package com.oscar.migration.config;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @description: 使用阿里 fastjson 作为 JSON MessageConverter
- * @author 翟振国
- * @date 2020/11/27 18:00
+ * WebMvcConfig配置
+ *
+ * @author zzg
+ * @date 2020/12/20 14:50
  */
 @Configuration
-public class FastJsonConfig  extends WebMvcConfigurationSupport  {
+public class WebMvcConfig extends WebMvcConfigurationSupport {
 
+    /**
+     * 使用阿里 fastjson 作为 JSON MessageConverter
+     */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
@@ -26,15 +32,16 @@ public class FastJsonConfig  extends WebMvcConfigurationSupport  {
                 // 保留 Map 空的字段
                 SerializerFeature.WriteMapNullValue,
                 // 将 String 类型的 null 转成""
-                SerializerFeature.WriteNullStringAsEmpty,
+//                SerializerFeature.WriteNullStringAsEmpty,
                 // 将 Number 类型的 null 转成 0
-                SerializerFeature.WriteNullNumberAsZero,
+//                SerializerFeature.WriteNullNumberAsZero,
                 // 将 List 类型的 null 转成 []
                 SerializerFeature.WriteNullListAsEmpty,
                 // 将 Boolean 类型的 null 转成 false
-                SerializerFeature.WriteNullBooleanAsFalse,
-                // 避免循环引用
-                SerializerFeature.DisableCircularReferenceDetect);
+                SerializerFeature.WriteNullBooleanAsFalse
+                // 避免重复引用
+                //SerializerFeature.DisableCircularReferenceDetect
+        );
 
         converter.setFastJsonConfig(config);
         converter.setDefaultCharset(Charset.forName("UTF-8"));
@@ -43,5 +50,18 @@ public class FastJsonConfig  extends WebMvcConfigurationSupport  {
         mediaTypeList.add(MediaType.APPLICATION_JSON);
         converter.setSupportedMediaTypes(mediaTypeList);
         converters.add(converter);
+    }
+
+    /**
+     * swagger2配置
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/public/**").addResourceLocations("classpath:/public/");
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations(
+                "classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations(
+                "classpath:/META-INF/resources/webjars/");
     }
 }

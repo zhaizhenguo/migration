@@ -33,9 +33,9 @@ class SysRoleServiceImplTest {
     @Test
     void save() {
         SysRole role = new SysRole();
-        role.setName("管理员4");
+        role.setName("管理员");
         role.setCreateBy("admin");
-        role.setRemark("试试呀！");
+        role.setRemark("又有");
         List<Long> list = new ArrayList<>();
         list.add(1L);
         list.add(2L);
