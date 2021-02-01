@@ -1,4 +1,4 @@
-package com.oscar.migration.webSocket;
+package com.oscar.migration.socketio;
 
 import com.oscar.migration.config.WebSocketConfig;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 @Slf4j
-@ServerEndpoint(value="/ws/asset",configurator= WebSocketConfig.class)
+@ServerEndpoint(value="/",configurator= WebSocketConfig.class)
 public class WebSocketServer {
 
     @PostConstruct

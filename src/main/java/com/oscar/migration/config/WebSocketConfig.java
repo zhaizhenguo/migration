@@ -33,8 +33,8 @@ public class WebSocketConfig extends Configurator{
     }
 
 
-//    @Bean
-//    public ServerEndpointExporter serverEndpointExporter () {
-//        return new ServerEndpointExporter();
-//    }
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter () {
+        return new ServerEndpointExporter();
+    }
 }

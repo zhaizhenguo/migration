@@ -1,5 +1,6 @@
 package com.oscar.migration.entity;
 
+import com.corundumstudio.socketio.SocketIOClient;
 import com.oscar.ui.common.controller.PageController;
 import lombok.Data;
 
@@ -18,6 +19,8 @@ public class UserResource {
     private Map<String, String> keyPairMap;
     /**迁移执行对象*/
     private PageController migController;
+    /**socket客户端对象*/
+    private SocketIOClient client;
     /**是否创建了工程*/
     private boolean isCreateProject;
 }

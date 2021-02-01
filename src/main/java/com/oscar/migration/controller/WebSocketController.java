@@ -1,6 +1,6 @@
 package com.oscar.migration.controller;
 
-import com.oscar.migration.webSocket.WebSocketServer;
+import com.oscar.migration.socketio.WebSocketServer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;

@@ -387,37 +387,4 @@ class DataMigrationControllerTest {
             }
         }
     }
-
-    @Test
-    public void testToJson(){
-        SchemaInfoVo schemaInfoVo = new SchemaInfoVo();
-        schemaInfoVo.setOid("0id");
-        schemaInfoVo.setName("Name");
-        List<TableInfoVo> tableList = new ArrayList<>(3);
-        TableInfoVo tableInfoVo = new TableInfoVo();
-        tableInfoVo.setSchemaInfoVo(schemaInfoVo);
-        tableInfoVo.setTableName("tableName");
-
-        TableInfoVo tableInfoVo1 = new TableInfoVo();
-        tableInfoVo1.setSchemaInfoVo(schemaInfoVo);
-        tableInfoVo1.setTableName("tableName1");
-
-        TableInfoVo tableInfoVo2 = new TableInfoVo();
-        tableInfoVo2.setSchemaInfoVo(schemaInfoVo);
-        tableInfoVo2.setTableName("tableName2");
-
-        tableList.add(tableInfoVo);
-        tableList.add(tableInfoVo2);
-        tableList.add(tableInfoVo1);
-        schemaInfoVo.setSqlTableInfos(tableList);
-
-//        String jsonString =JSON.toJSONString(schemaInfoVo, SerializerFeature.DisableCircularReferenceDetect);
-        String jsonString = JSON.toJSONString(schemaInfoVo);
-        System.out.println(jsonString);
-
-        SchemaInfoVo schemaInfoVo1 = JSON.toJavaObject((JSONObject)JSON.parse(jsonString), SchemaInfoVo.class);
-        System.out.println(schemaInfoVo1);
-
-
-    }
 }
