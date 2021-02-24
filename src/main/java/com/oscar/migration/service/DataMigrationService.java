@@ -121,7 +121,6 @@ public class DataMigrationService {
             List<SourceTypesInfo> sourceTypesInfos = Xdb2OscarMapUtil.loadTempXml(sDbType, null);
             //重组列内容
             Xdb2OscarMapUtil.srcTypes2List(sourceTypesInfos, sDbType, null);
-            System.out.println("获取字段类型映射JSON.toJSONString(sourceTypesInfos)==="+JSON.toJSONString(sourceTypesInfos));
             return Result.ok(sourceTypesInfos);
         } catch (Exception ex) {
             log.error("Exception", ex);
@@ -144,7 +143,7 @@ public class DataMigrationService {
         String sourceType = pageController.getProject().getConvertionData().getSourceConnInfo().getType();
         Map<String, SourceTypesInfo> typeMapSet = new HashMap<>(sourceTypesInfos.size());
         Iterator<SourceTypesInfo> iterator = sourceTypesInfos.iterator();
-        /**将table中的类型映射信息存入Project类中的对应Map对象
+        /*将table中的类型映射信息存入Project类中的对应Map对象
          * 无重复情况已源类型名称作为key，有重复的情况用ID作为key
          */
         if (MigrationConstants.ORACLE_Type.equals(sourceType)) {
@@ -222,7 +221,7 @@ public class DataMigrationService {
             if (MigrationConstants.ORACLE_Type.equals(sourceType)) {
                 while (iterator.hasNext()) {
                     SourceTypesInfo stype = iterator.next();
-                    if ("NUMERIC".equals(stype.getSname()) || (stype.getSname().indexOf("TIMESTAMP") != -1)
+                    if ("NUMERIC".equals(stype.getSname()) || (stype.getSname().contains("TIMESTAMP"))
                             || "BPCHAR".equals(stype.getSname()) || "CHAR".equals(stype.getSname())
                             || "VARCHAR".equals(stype.getSname())) {
                         typeMapSet.put(stype.getId(), stype);
@@ -262,7 +261,7 @@ public class DataMigrationService {
         List<SchemaInfo> targetSchemaInfos = pageController.getDestAcquire().fetchSchemaInfos();
         pageController.setDestSchemaInfos(targetSchemaInfos);
         //源端name集合
-        List<String> schemaNameList = new ArrayList(schemaInfos.size());
+        List<String> schemaNameList = new ArrayList<>(schemaInfos.size());
         //源端id name 映射关系
         Map<String, String> sourceSchemaIdNameMap = new HashMap<>(schemaInfos.size());
         for (SchemaInfo schemainfo : schemaInfos) {
@@ -279,7 +278,6 @@ public class DataMigrationService {
         resMap.put("sourceSchemaIdNameMap", sourceSchemaIdNameMap);
         resMap.put("targetSchemaIdNameMap", targetSchemaIdNameMap);
         resMap.put("targetPattern", targetSchemaInfos);
-        System.out.println("获取所有模式信息JSON.toJSONString(resMap)==="+JSON.toJSONString(resMap));
         return Result.ok(resMap);
     }
 
@@ -317,9 +315,6 @@ public class DataMigrationService {
         Map<String, Object> resMap = new HashMap<>(2);
         resMap.put("sourceTablespace", srcTableSpaces);
         resMap.put("targetTablespace", destTableSpaces);
-
-        System.out.println("获取源库和目的库表空间信息列表JSON.toJSONString(resMap)==="+JSON.toJSONString(resMap));
-
         return Result.ok(resMap);
     }
 
@@ -437,7 +432,6 @@ public class DataMigrationService {
         resMap.put("tablespace", srcTableSpaces);
         resMap.put("tableNameList", tableNameList);
         String s = JSON.toJSONString(schemaInfo);
-        System.out.println("s=========" + s);
         resMap.put("schemaInfo", schemaInfo);
 
         return Result.ok(resMap);
@@ -523,24 +517,24 @@ public class DataMigrationService {
      * @return: com.oscar.migration.vo.Result
      */
     public Result startMigration(PageController pageController) {
-        /**加载列信息*/
+        //加载列信息
         uploadLineData(pageController);
-        /**加载其他信息*/
+        //加载其他信息
         uploadOtherData(pageController);
 
         CountDownLatch latch = new CountDownLatch(1);
-        Long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         PreviewUtil previewUtil = new PreviewUtil(pageController.getProject(), pageController
                 .getCurrentSourceConnInfo().getType(), pageController);
         pageController.setPreviewUtil(previewUtil);
-        /**执行迁移*/
+        //执行迁移
         new MigrationExecPage(pageController, latch);
         try {
             latch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Long endTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();
         DecimalFormat decimalFormat = new DecimalFormat("0.000");
         String time = decimalFormat.format(((double) endTime - (double) startTime) / 1000);
         log.info("迁移用时： " + time + "s");
@@ -629,7 +623,7 @@ public class DataMigrationService {
         SourceTypesInfo stype = new SourceTypesInfo();
         stype.setSname(sName.toUpperCase());
         stype.setId(sName.toUpperCase());
-        List<TargetTypesInfo> accTypes = new ArrayList<TargetTypesInfo>();
+        List<TargetTypesInfo> accTypes = new ArrayList<>();
         TargetTypesInfo targetTypesInfo = new TargetTypesInfo();
         targetTypesInfo.setTtypeName(tName.toUpperCase());
         targetTypesInfo.setId("T" + sName.toUpperCase() + "2" + tName.toUpperCase() + "PS");
@@ -671,12 +665,15 @@ public class DataMigrationService {
         String targetType = pageController.getProject().getConvertionData().getTargetConnInfo().getType();
         //获取表对象
         TableInfo tableInfo = getTableObjectByName(pageController, patternName, tableName);
+        if (tableInfo== null){
+            return null;
+        }
         //加载列基础信息
         pageController.fetchColumns(tableInfo);
         //重组列信息
         pageController.getConvertionData().setTypeMappingChanged(false);
         loadTableColumn(sourceType, targetType, tableInfo, pageController.getProject().getStypes());
-        List list = new ArrayList<TableInfo>(1);
+        ArrayList<TableInfo> list = new ArrayList(1);
         list.add(tableInfo);
         //加载表中其他信息
         fetchUnloadObjects(list, pageController);

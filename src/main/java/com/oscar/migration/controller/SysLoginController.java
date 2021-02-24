@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -32,6 +34,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -64,9 +67,19 @@ public class SysLoginController {
         String text = producer.createText();
         /**生成图片验证码*/
         BufferedImage image = producer.createImage(text);
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            Arrays.stream(cookies).map(cookie -> cookie.getName()).forEach(System.out::println);
+        } else {
+            System.out.println("生成图片验证码cookie为空");
+        }
         /**保存到验证码到 session*/
-        HttpSession session = request.getSession();
-        log.info("生成图片验证码sessionId==={}",session.getId());
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            log.info("生成图片验证码sessionId为空");
+            session = request.getSession();
+        }
+        log.info("生成图片验证码sessionId==={}", session.getId());
         session.setAttribute(SysConstants.KAPTCHA_SESSION_KEY, text);
         ServletOutputStream out = response.getOutputStream();
         ImageIO.write(image, "jpg", out);
@@ -79,13 +92,20 @@ public class SysLoginController {
      * @date 2020/12/28 17:42
      */
     @GetMapping("/getPublicKey")
-    public Result getPublicKey(HttpServletRequest request) {
+    public Result getPublicKey(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> keyMap = RSAUtils.genKeyPair();
         String publicKey = keyMap.get("publicKey");
         //将公钥加密后在发送给前台
         publicKey = RSAUtils.encrypt(publicKey, SysConstants.PUBLICKEY);
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            Arrays.stream(cookies).map(cookie -> cookie.getValue()).forEach(System.out::println);
+        } else {
+            System.out.println("获取密钥对cookie为空");
+        }
+
         HttpSession session = request.getSession(false);
-        if (session==null){
+        if (session == null) {
             return Result.error(ResponseCode.LOGIN_TIMEOUT_ERROR.code, ResponseCode.LOGIN_TIMEOUT_ERROR.msg);
         }
         String id = session.getId();
@@ -95,7 +115,7 @@ public class SysLoginController {
         }
         userResource.setKeyPairMap(keyMap);
         userResource.setSessionId(id);
-        log.info("获取密钥对sessionId===={}",id);
+        log.info("获取密钥对sessionId===={}", id);
         //将当前用户存到内存中
         SysConstants.UserResourceMap.put(id, userResource);
         return Result.ok((Object) publicKey);
@@ -135,7 +155,7 @@ public class SysLoginController {
         UserResource userResource = SysConstants.UserResourceMap.get(sessionId);
 
         if (userResource == null) {
-            log.info("获取userResource  sessionId===={}",sessionId);
+            log.info("获取userResource  sessionId===={}", sessionId);
             log.error("UserResource为空");
             return Result.error(ResponseCode.LOGIN_TIMEOUT_ERROR.code, ResponseCode.LOGIN_TIMEOUT_ERROR.msg);
         }

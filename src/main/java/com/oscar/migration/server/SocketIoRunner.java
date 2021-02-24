@@ -1,10 +1,9 @@
-package com.oscar.migration.socketio;
+package com.oscar.migration.server;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,23 +12,20 @@ import org.springframework.stereotype.Component;
  * @date 2021/2/1 13:35
  */
 @Component
-@Order(value=1)
 @Slf4j
-public class ServerRunner implements CommandLineRunner {
+public class SocketIoRunner implements CommandLineRunner {
     private final SocketIOServer server;
 
     @Autowired
-    public ServerRunner(SocketIOServer server) {
+    public SocketIoRunner(SocketIOServer server) {
         this.server = server;
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        log.info("socket.io启动成功！");
+    public void run(String... args) {
+        log.info("---------- NettySocketIO通知服务开始启动 ----------");
         server.start();
+        log.info("---------- NettySocketIO通知服务启动成功 ----------");
     }
 
 }
-
-
-

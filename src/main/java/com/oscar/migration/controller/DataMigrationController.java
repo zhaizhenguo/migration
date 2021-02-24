@@ -84,8 +84,6 @@ public class DataMigrationController {
         if (pageController == null) {
             return Result.error("连接超时,请重新登录");
         }
-        System.out.println("保存字段类型映射JSON.toJSONString(sourceTypesInfos)==="+JSON.toJSONString(sourceTypesInfos));
-
         return migrationService.saveTypeMapping(sourceTypesInfos, pageController);
     }
 
@@ -129,8 +127,7 @@ public class DataMigrationController {
         if (pageController == null) {
             return Result.error("连接超时,请重新登录");
         }
-        Result patternDataById = migrationService.getPatternDataById(pageController, id);
-        return patternDataById;
+        return migrationService.getPatternDataById(pageController, id);
     }
 
 

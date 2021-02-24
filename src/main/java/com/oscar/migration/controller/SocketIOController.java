@@ -42,9 +42,10 @@ public class SocketIOController {
             //判断当前用户是否已登录并创建资源
             if (StringUtils.isBlank(sessionId) || !SysConstants.UserResourceMap.containsKey(sessionId)) {
                 log.error("未找到用户资源");
-                client.sendEvent("msgEvent", Result.error("未找到用户资源,请重新登录"));
+                client.sendEvent("errorMsg", Result.error("未找到用户资源,请重新登录"));
                 return;
             }
+            client.sendEvent("migrationStatusMsg", Result.ok("migrationStatusMsg 已迁移完成"));
             //设置socket客户端
             SysConstants.UserResourceMap.get(sessionId).setClient(client);
             log.info("建立连接成功");
@@ -74,14 +75,41 @@ public class SocketIOController {
     }
 
     /**
-     * @description: socket事件消息接收入口
+     * @description: 通用消息事件
      * @author zzg
      * @date: 2021/2/1 17:02
      * @param: [client, ackRequest, msg]
      */
-    @OnEvent("msgEvent")
-    public void onEvent(SocketIOClient client, AckRequest ackRequest, String msg) {
-        log.info("接收到客户端消息msg==={}", msg);
+    @OnEvent("commonMsg")
+    public void commonMsg(SocketIOClient client, AckRequest ackRequest, String msg) {
+        log.info("接收到客户端消息commonMsg==={}", msg);
+        log.info("client==={}", client);
+        log.info("ackRequest==={}", ackRequest);
+    }
+    /**
+     * @description: 错误消息事件
+     * @author zzg
+     * @date: 2021/2/2 10:01
+     * @param: [client, ackRequest, msg]
+     * @return: void
+     */
+    @OnEvent("errorMsg")
+    public void errorMsg(SocketIOClient client, AckRequest ackRequest, String msg) {
+        log.info("接收到客户端消息errorMsg==={}", msg);
+        log.info("client==={}", client);
+        log.info("ackRequest==={}", ackRequest);
+    }
+
+    /**
+     * @description: 迁移状态消息事件
+     * @author zzg
+     * @date: 2021/2/2 10:01
+     * @param: [client, ackRequest, msg]
+     * @return: void
+     */
+    @OnEvent("migrationStatusMsg")
+    public void migrationStatusMsg(SocketIOClient client, AckRequest ackRequest, String msg) {
+        log.info("接收到客户端消息migrationStatusMsg==={}", msg);
         log.info("client==={}", client);
         log.info("ackRequest==={}", ackRequest);
     }

@@ -2,7 +2,6 @@ package com.oscar.migration.config;
 
 import com.oscar.migration.security.JwtAuthenticationFilter;
 import com.oscar.migration.security.JwtAuthenticationProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
+import javax.annotation.Resource;
+
 /**
  * Spring Security Config
  */
@@ -24,11 +25,11 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+    @Resource
     private UserDetailsService userDetailsService;
 
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    public void configure(AuthenticationManagerBuilder auth){
         // 使用自定义身份验证组件
         auth.authenticationProvider(new JwtAuthenticationProvider(userDetailsService));
     }
@@ -62,8 +63,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // webSocket
                 .antMatchers("/ws/asset").permitAll()
                 .antMatchers("/socket.io/").permitAll()
+                // TODO  备份  02-23
                 // 其他所有请求需要身份认证
-                .anyRequest().authenticated();
+//                .anyRequest().authenticated();
+                //结束
+                .antMatchers("/*").permitAll();
+
         // 退出登录处理器
         http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
         // token验证过滤器

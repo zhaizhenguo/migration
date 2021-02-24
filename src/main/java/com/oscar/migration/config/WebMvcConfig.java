@@ -2,13 +2,21 @@ package com.oscar.migration.config;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +40,9 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
                 // 保留 Map 空的字段
                 SerializerFeature.WriteMapNullValue,
                 // 将 String 类型的 null 转成""
-//                SerializerFeature.WriteNullStringAsEmpty,
+                //SerializerFeature.WriteNullStringAsEmpty,
                 // 将 Number 类型的 null 转成 0
-//                SerializerFeature.WriteNullNumberAsZero,
+                //SerializerFeature.WriteNullNumberAsZero,
                 // 将 List 类型的 null 转成 []
                 SerializerFeature.WriteNullListAsEmpty,
                 // 将 Boolean 类型的 null 转成 false
@@ -44,7 +52,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         );
 
         converter.setFastJsonConfig(config);
-        converter.setDefaultCharset(Charset.forName("UTF-8"));
+        converter.setDefaultCharset(StandardCharsets.UTF_8);
         List<MediaType> mediaTypeList = new ArrayList<>();
         // 解决中文乱码问题，相当于在 Controller 上的 @RequestMapping 中加了个属性 produces = "application/json"
         mediaTypeList.add(MediaType.APPLICATION_JSON);
@@ -63,5 +71,45 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
                 "classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations(
                 "classpath:/META-INF/resources/webjars/");
+    }
+
+    /**
+     * @description: 跨域配置
+     * @author zzg
+     * @date: 2021/2/3 14:39
+     */
+    private CorsConfiguration corsConfig() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        /*
+         * 设置响应头，允许跨域访问
+         * 带cookie请求时，必须为全匹配，不能使用*
+         * 表示允许 origin 发起跨域请求。
+         */
+        corsConfiguration.addAllowedOrigin("http://192.168.1.74:8083");
+        corsConfiguration.addAllowedOrigin("http://192.168.1.74:8080");
+        corsConfiguration.addAllowedOrigin("http://192.168.1.74:8081");
+        //支持所有自定义头 Content-Type,X-Cookie 等
+        corsConfiguration.addAllowedHeader("*");
+        // 表示允许跨域请求的方法
+        corsConfiguration.addAllowedMethod(HttpMethod.GET);
+        corsConfiguration.addAllowedMethod(HttpMethod.POST);
+        corsConfiguration.addAllowedMethod(HttpMethod.OPTIONS);
+        //允许cookie
+        corsConfiguration.setAllowCredentials(true);
+        //表示在3600秒内不需要再发送预校验请求
+        corsConfiguration.setMaxAge(3600L);
+        return corsConfiguration;
+    }
+
+    /**
+     * @description: 跨域过滤器
+     * @author zzg
+     * @date: 2021/2/3 14:39
+     */
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfig());
+        return new CorsFilter(source);
     }
 }
